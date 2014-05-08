@@ -10,6 +10,7 @@
 #import <objc/runtime.h>
 
 static NSString *RI_BUTTON_ASS_KEY = @"com.random-ideas.BUTTONS";
+static NSString *RI_DISMISS_BLOCK_ASS_KEY = @"com.random-ideas.DISMISS_BLOCK";
 
 @implementation UIAlertView (Blocks)
 
@@ -65,7 +66,21 @@ static NSString *RI_BUTTON_ASS_KEY = @"com.random-ideas.BUTTONS";
     if(item.action)
         item.action();
     objc_setAssociatedObject(self, RI_BUTTON_ASS_KEY, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    UIAlertViewDismissBlock dismissBlock = objc_getAssociatedObject(self, RI_DISMISS_BLOCK_ASS_KEY);
+    if (dismissBlock)
+    {
+        dismissBlock();
+    }
+    objc_setAssociatedObject(self, RI_DISMISS_BLOCK_ASS_KEY, nil, OBJC_ASSOCIATION_COPY);
+    
     [self release]; // and release yourself!
+}
+
+- (void)setDismissBlock:(UIAlertViewDismissBlock)dismissBlock
+{
+    NSAssert(dismissBlock, @"Missing dismissBlock");
+    objc_setAssociatedObject(self, RI_DISMISS_BLOCK_ASS_KEY, dismissBlock, OBJC_ASSOCIATION_COPY);
 }
 
 @end

@@ -9,10 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "RIButtonItem.h"
 
+typedef void (^UIActionSheetBlock)(UIActionSheet *actionSheet);
+
 @interface UIActionSheet (Blocks) <UIActionSheetDelegate>
 
 -(id)initWithTitle:(NSString *)inTitle cancelButtonItem:(RIButtonItem *)inCancelButtonItem destructiveButtonItem:(RIButtonItem *)inDestructiveItem otherButtonItems:(RIButtonItem *)inOtherButtonItems, ... NS_REQUIRES_NIL_TERMINATION;
 
 - (NSInteger)addButtonItem:(RIButtonItem *)item;
+
+- (void)setDismissBlock:(UIActionSheetBlock)block;
+- (void)setPresentBlock:(UIActionSheetBlock)block;
 
 @end

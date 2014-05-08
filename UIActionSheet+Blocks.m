@@ -10,6 +10,8 @@
 #import <objc/runtime.h>
 
 static NSString *RI_BUTTON_ASS_KEY = @"com.random-ideas.BUTTONS";
+static NSString *RI_DISMISS_BLOCK_ASS_KEY = @"com.random-ideas.DISMISS_BLOCK";
+static NSString *RI_PRESENT_BLOCK_ASS_KEY = @"com.random-ideas.PRESENT_BLOCK";
 
 @implementation UIActionSheet (Blocks)
 
@@ -78,8 +80,36 @@ static NSString *RI_BUTTON_ASS_KEY = @"com.random-ideas.BUTTONS";
         objc_setAssociatedObject(self, RI_BUTTON_ASS_KEY, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     
+    UIActionSheetBlock dismissBlock = objc_getAssociatedObject(self, RI_DISMISS_BLOCK_ASS_KEY);
+    if (dismissBlock)
+    {
+        dismissBlock(actionSheet);
+    }
+    objc_setAssociatedObject(self, RI_DISMISS_BLOCK_ASS_KEY, nil, OBJC_ASSOCIATION_COPY);
+    
     [self release]; // and release yourself!
 }
 
+- (void)willPresentActionSheet:(UIActionSheet *)actionSheet
+{
+    UIActionSheetBlock presentBlock = objc_getAssociatedObject(self, RI_PRESENT_BLOCK_ASS_KEY);
+    if (presentBlock)
+    {
+        presentBlock(actionSheet);
+    }
+    objc_setAssociatedObject(self, RI_PRESENT_BLOCK_ASS_KEY, nil, OBJC_ASSOCIATION_COPY);
+}
+
+- (void)setDismissBlock:(UIActionSheetBlock)block
+{
+    NSAssert(block, @"Missing block");
+    objc_setAssociatedObject(self, RI_DISMISS_BLOCK_ASS_KEY, block, OBJC_ASSOCIATION_COPY);
+}
+
+- (void)setPresentBlock:(UIActionSheetBlock)block
+{
+    NSAssert(block, @"Missing block");
+    objc_setAssociatedObject(self, RI_PRESENT_BLOCK_ASS_KEY, block, OBJC_ASSOCIATION_COPY);
+}
 
 @end
