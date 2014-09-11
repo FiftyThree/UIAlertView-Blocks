@@ -87,6 +87,10 @@ static NSString *RI_PRESENT_BLOCK_ASS_KEY = @"com.random-ideas.PRESENT_BLOCK";
     }
     objc_setAssociatedObject(self, RI_DISMISS_BLOCK_ASS_KEY, nil, OBJC_ASSOCIATION_COPY);
     
+    // iOS8 Fix: this method gets called more than once on an action sheet's delegate when it is
+    // dismissed. Obviously this causes a fatal crash when the action sheet has already been released.
+    self.delegate = nil;
+    
     [self release]; // and release yourself!
 }
 
