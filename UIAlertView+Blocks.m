@@ -74,6 +74,9 @@ static NSString *RI_DISMISS_BLOCK_ASS_KEY = @"com.random-ideas.DISMISS_BLOCK";
     }
     objc_setAssociatedObject(self, RI_DISMISS_BLOCK_ASS_KEY, nil, OBJC_ASSOCIATION_COPY);
     
+    // Zero out delegate before release to be safe
+    self.delegate = nil;
+
     [self release]; // and release yourself!
 }
 
